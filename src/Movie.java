@@ -89,6 +89,16 @@ public class Movie
 
     public String toString()
     {
-        return "Title: " + title + ", Tagline: " + tagline;
+        String t = "Title: " + title + "\n";
+        String tag = "Tagline: " + tagline + "\n";
+        String r = "Runtime: " + runtime + "\n";
+        String y = "Year: " + year + "\n";
+        String d = "Directed by: " + director + "\n";
+        String c = "Cast: " + cast + "\n";
+        String o = "Overview: " + overview + "\n";
+        String u = "User rating: " + userRating + "\n";
+        String b = "Box office revenue :" + revenue + "\n";
+        return t + tag + r + y + d + c + o + u + b;
     }
+
 }
