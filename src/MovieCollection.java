@@ -6,6 +6,7 @@ import java.sql.Array;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Scanner;
+import java.util.*;
 
 public class MovieCollection
 {
@@ -150,17 +151,27 @@ public class MovieCollection
             listToSort.set(possibleIndex, temp);
         }
     }
+
     public void removeDuplicate(ArrayList<String> list){
-        for(int i = 0; i<list.size() ; i++){
-            for(int k = 0 ; k<list.size() ; k++){
-                if(list.get(i)==list.get(k)){
-                    list.remove(i);
-                    i--;
-                }
+        ArrayList<String> newList = new ArrayList<String>();
+
+        for(String sub : list){
+            if(!newList.contains(sub)){
+                newList.add(sub);
             }
         }
 
-    }
+            for(int i = 0; i<list.size() ; i++){
+                list.remove(i);
+                i--;
+            }
+            for(int i = 0 ; i<newList.size() ; i++ ){
+                list.add(newList.get(i));
+
+            }
+        }
+
+
 
     private void displayMovieInfo(Movie movie)
     {
@@ -200,26 +211,32 @@ public class MovieCollection
                 match.add(castList.get(r));
             }
         }
+        Collections.sort(match);
         // print out every cast member that match the input
         for(int i = 0; i<match.size() ; i++){
-            System.out.println(i+1 + " ." + match.get(i));
+            System.out.println(i+1 + ". " + match.get(i));
         }
+
         //Ask user to select a cast
+        System.out.println("Select a cast member:");
         Scanner cN = new Scanner(System.in);
         int castNum = cN.nextInt();
+        String cast = match.get(castNum-1);
+        cast = cast.toLowerCase();
         //Add all the movies that the cast appeared in to the CastMovie Arraylist
         for(int i = 0 ; i < movies.size() ; i++){
-            if(movies.get(i).getCast().toLowerCase().indexOf(s)!=-1){
+            if(movies.get(i).getCast().toLowerCase().indexOf(cast)!=-1){
                 castMovie.add(movies.get(i));
             }
         }
+        sortResults(castMovie);
         // print out all the movies that the cast appeared in
         for(int i = 0 ; i<castMovie.size() ; i++){
-            System.out.println("i+1: " + castMovie.get(i));
+            System.out.println( i+1 + ". "+ castMovie.get(i).getTitle());
         }
         // takes user's input
         Scanner c = new Scanner(System.in);
-        System.out.println("Which cast member would like to learn more about?");
+        System.out.println("Which movie would like to learn more about?");
         int choice = c.nextInt();
         System.out.println(castMovie.get(choice-1).toString());
 
@@ -261,16 +278,84 @@ public class MovieCollection
 
     private void listGenres()
     {
-
+        ArrayList<String> genres = new ArrayList<String>();
+        for(int i = 0 ; i< movies.size() ; i++){
+           String [] listOfGenres = movies.get(i).getGenres().split("\\|");
+           for(int k = 0; k<listOfGenres.length ; k++){
+               genres.add(listOfGenres[k]);
+           }
+        }
+        removeDuplicate(genres);
+        Collections.sort(genres);
+        // print out all the genres without duplicates
+        for(int i = 0 ; i<genres.size() ; i++){
+            System.out.println( i+1 + ". " + genres.get(i));
+        }
+        ArrayList<Movie> m = new ArrayList<Movie>();
+        System.out.println("Which genre would you like to learn more about?");
+        Scanner c = new Scanner(System.in);
+        int choice = c.nextInt();
+        String selectedGenre = genres.get(choice-1);
+        // store all the movies that match the genre
+        for(int i = 0 ; i<movies.size() ; i++){
+            if(movies.get(i).getGenres().indexOf(selectedGenre)!=-1){
+                m.add(movies.get(i));
+            }
+        }
+        sortResults(m);
+        for(int i = 0 ; i<m.size() ; i++){
+            System.out.println(i+1 + ". " + m.get(i).getTitle());
+        }
+        System.out.println("Which movie would you like to learn more about?");
+        Scanner num = new Scanner(System.in);
+        int s = num.nextInt();
+        System.out.println(m.get(s-1));
     }
 
     private void listHighestRated()
     {
+        ArrayList<Movie> highestRated = new ArrayList<Movie>();
+        ArrayList<Double> rating = new ArrayList<Double>();
+        for(int i = 0 ; i<movies.size() ; i++){
+      rating.add(movies.get(i).getUserRating());
+        }
+        for(int i = 0 ; i<50 ; i++){
+           int index = rating.indexOf(Collections.max(rating));
+           highestRated.add(movies.get(index));
+           movies.remove(index);
+           rating.remove(index);
 
+        }
+        for(int i = 0 ; i<highestRated.size() ; i++){
+            System.out.println(i+1 + ". " + highestRated.get(i).getTitle() + ": " + highestRated.get(i).getUserRating());
+        }
+        Scanner s = new Scanner(System.in);
+        System.out.println("Which movie would you like to learn more about?");
+        int c = s.nextInt();
+        System.out.println(highestRated.get(c-1).toString());
     }
 
     private void listHighestRevenue()
     {
+        ArrayList<Movie> highestRevenue = new ArrayList<Movie>();
+        ArrayList<Integer> revenue = new ArrayList<Integer>();
+        for(int i = 0 ; i<movies.size() ; i++){
+            revenue.add(movies.get(i).getRevenue());
+        }
+        for(int i = 0 ; i<50 ; i++){
+            int index = revenue.indexOf(Collections.max(revenue));
+            highestRevenue.add(movies.get(index));
+            movies.remove(index);
+            revenue.remove(index);
+        }
+        for(int i = 0 ; i<highestRevenue.size() ; i++){
+            System.out.println(i+1 + ". " + highestRevenue.get(i).getTitle() + ": " + highestRevenue.get(i).getRevenue());
+        }
+        Scanner c = new Scanner(System.in);
+        System.out.println("Which movie would you like to learn more about?");
+        int choice = c.nextInt();
+        System.out.println(highestRevenue.get(choice-1).toString());
+
 
     }
 

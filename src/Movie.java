@@ -97,7 +97,7 @@ public class Movie
         String c = "Cast: " + cast + "\n";
         String o = "Overview: " + overview + "\n";
         String u = "User rating: " + userRating + "\n";
-        String b = "Box office revenue :" + revenue + "\n";
+        String b = "Box office revenue: " + revenue + "\n";
         return t + tag + r + y + d + c + o + u + b;
     }
 
